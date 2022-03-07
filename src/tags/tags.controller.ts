@@ -18,10 +18,10 @@ import { TagsService } from './tags.service';
 import { CreateTagDto } from './dto/create-tag.dto';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/roles/roles.decorator';
-import { RoleEnum } from 'src/roles/roles.enum';
+import { Roles } from 'src/users/roles/roles.decorator';
+import { RoleEnum } from 'src/users/roles/roles.enum';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/roles/roles.guard';
+import { RolesGuard } from 'src/users/roles/roles.guard';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 
 @ApiTags('Tags')

@@ -6,7 +6,7 @@ export class UpdateCategoryDto {
   @IsOptional()
   id: number;
 
-  @ApiProperty({example:"Template"})
+  @ApiProperty({ example: 'Template' })
   @IsString()
   @IsNotEmpty()
   @IsOptional()

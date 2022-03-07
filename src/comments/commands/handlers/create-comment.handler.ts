@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../implementations/create-comment.command';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Comment } from '../../entities/comment.entity';
+import { Comment } from 'src/comments/entities/comment.entity';
 import { Repository } from 'typeorm';
 
 @CommandHandler(CreateCommentCommand)
@@ -16,7 +16,7 @@ export class CreateCommentHandler
   async execute(command: CreateCommentCommand) {
     const newPost = await this.commentsRepository.create({
       ...command.comment,
-      author: command.author
+      author: command.author,
     });
     await this.commentsRepository.save(newPost);
     return newPost;

@@ -12,5 +12,5 @@ export class Status extends EntityHelper {
   @ApiProperty({ example: 'active' })
   @Allow()
   @Column()
-  name?: string;
+  name: string;
 }

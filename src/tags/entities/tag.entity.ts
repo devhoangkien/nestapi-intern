@@ -27,6 +27,6 @@ export class Tag extends EntityHelper {
   name?: string;
 
   @ManyToMany(() => Post, (post) => post.tags)
-  @JoinColumn({name: 'post_id'})
+  @JoinColumn({ name: 'post_id' })
   posts: Post[];
 }

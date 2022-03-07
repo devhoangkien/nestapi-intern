@@ -1,5 +1,11 @@
-import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import {Post} from 'src/posts/entities/post.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Post } from 'src/posts/entities/post.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()

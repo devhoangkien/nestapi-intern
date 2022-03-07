@@ -1,8 +1,12 @@
 import { IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class GetCommentsDto {
+class GetCommentsDto {
   @Type(() => Number)
   @IsOptional()
+  @ApiProperty()
   postId?: number;
 }
+
+export default GetCommentsDto;

@@ -5,18 +5,17 @@ import * as bcrypt from 'bcryptjs';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { AuthUpdateDto } from './dto/auth-update.dto';
 import { randomStringGenerator } from '@nestjs/common/utils/random-string-generator.util';
-import { RoleEnum } from 'src/roles/roles.enum';
+import { RoleEnum } from 'src/users/roles/roles.enum';
 import { StatusEnum } from 'src/statuses/statuses.enum';
 import * as crypto from 'crypto';
 import { plainToClass } from 'class-transformer';
 import { Status } from 'src/statuses/entities/status.entity';
-import { Role } from 'src/roles/entities/role.entity';
+import { Role } from 'src/users/roles/entities/role.entity';
 import { AuthProvidersEnum } from './auth-providers.enum';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 import { UsersService } from 'src/users/users.service';
-import { ForgotService } from 'src/forgot/forgot.service';
+import { ForgotService } from 'src/auth/forgot/forgot.service';
 import { MailService } from 'src/mail/mail.service';
-import { SocialInterface } from 'src/social/interfaces/social.interface';
 
 @Injectable()
 export class AuthService {
@@ -36,9 +35,7 @@ export class AuthService {
     });
 
     if (
-      !user ||
-      (user &&
-        !(onlyAdmin ? [RoleEnum.admin] : [RoleEnum.user]).includes(
+      !user ||(user &&!(onlyAdmin ? [RoleEnum.user]:[RoleEnum.admin]).includes(
           user.role.id,
         ))
     ) {
@@ -46,7 +43,7 @@ export class AuthService {
         {
           status: HttpStatus.UNPROCESSABLE_ENTITY,
           errors: {
-            email: 'notFound',
+            email: 'emailNotExists',
           },
         },
         HttpStatus.UNPROCESSABLE_ENTITY,
@@ -90,62 +87,6 @@ export class AuthService {
     }
   }
 
-  async validateSocialLogin(
-    authProvider: string,
-    socialData: SocialInterface,
-  ): Promise<{ token: string; user: User }> {
-    let user: User;
-    const socialEmail = socialData.email?.toLowerCase();
-
-    const userByEmail = await this.usersService.findOne({
-      email: socialEmail,
-    });
-
-    user = await this.usersService.findOne({
-      // socialId: socialData.id,
-      provider: authProvider,
-    });
-
-    if (user) {
-      if (socialEmail && !userByEmail) {
-        user.email = socialEmail;
-      }
-      await this.usersService.update(user.id, user);
-    } else if (userByEmail) {
-      user = userByEmail;
-    } else {
-      const role = plainToClass(Role, {
-        id: RoleEnum.user,
-      });
-      const status = plainToClass(Status, {
-        id: StatusEnum.active,
-      });
-
-      user = await this.usersService.create({
-        email: socialEmail,
-        firstName: socialData.firstName,
-        lastName: socialData.lastName,
-        socialId: socialData.id,
-        provider: authProvider,
-        role,
-        status,
-      });
-
-      user = await this.usersService.findOne({
-        id: user.id,
-      });
-    }
-
-    const jwtToken = await this.jwtService.sign({
-      id: user.id,
-      role: user.role,
-    });
-
-    return {
-      token: jwtToken,
-      user,
-    };
-  }
 
   async register(dto: AuthRegisterLoginDto): Promise<void> {
     const hash = crypto

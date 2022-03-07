@@ -2,31 +2,28 @@
   "type": "mysql",
   "host": "localhost",
   "port": 3306,
-  "username": "root",
-  "password": "password",
+  "username": "ekoios",
+  "password": "ekoiospw",
   "database": "blogapi",
-  "synchronize": false,
+  "synchronize": true,
   "dropSchema": false,
   "keepConnectionAlive": true,
-  "logging": true,
   "entities": [
-    "E:\\EKOIOS\\blognews\\src\\database/../**/*.entity{.ts,.js}"
+    "E:\\EKOIOS\\nestapi-intern\\src\\database/../**/*.entity{.ts,.js}"
   ],
   "migrations": [
-    "E:\\EKOIOS\\blognews\\src\\database/migrations/**/*{.ts,.js}"
+    "E:\\EKOIOS\\nestapi-intern\\src\\database/migrations/**/*{.ts,.js}"
   ],
   "seeds": [
-    "E:\\EKOIOS\\blognews\\src\\database/seeds/**/*{.ts,.js}"
+    "E:\\EKOIOS\\nestapi-intern\\src\\database/seeds/**/*{.ts,.js}"
   ],
   "factories": [
-    "E:\\EKOIOS\\blognews\\src\\database/factories/**/*{.ts,.js}"
+    "E:\\EKOIOS\\nestapi-intern\\src\\database/factories/**/*{.ts,.js}"
   ],
   "cli": {
     "entitiesDir": "src",
     "migrationsDir": "src/database/migrations",
     "subscribersDir": "subscriber"
   },
-  "extra": {
-    "max": 100
-  }
+  "extra": {}
 }
