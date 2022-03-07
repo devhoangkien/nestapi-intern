@@ -7,17 +7,19 @@ import {
   Patch,
   UseGuards,
   UseInterceptors,
-  ClassSerializerInterceptor, Post, Put,
+  ClassSerializerInterceptor,
+  Post,
+  Put,
 } from '@nestjs/common';
 import CategoriesService from './categories.service';
 import CreateCategoryDto from './dto/create-category.dto';
 import UpdateCategoryDto from './dto/update-category.dto';
-import FindOneParams from '../utils/find-one-params';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/roles/roles.decorator';
-import { RoleEnum } from 'src/roles/roles.enum';
+import { ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import { Roles } from 'src/users/roles/roles.decorator';
+import { RoleEnum } from 'src/users/roles/roles.enum'
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/roles/roles.guard';
+import { RolesGuard } from 'src/users/roles/roles.guard';
+import FindOneParams from 'src/utils/find-one-params';
 
 @ApiTags('Category')
 @Controller({
@@ -26,9 +28,7 @@ import { RolesGuard } from 'src/roles/roles.guard';
 })
 @UseInterceptors(ClassSerializerInterceptor)
 export default class CategoriesController {
-  constructor(
-    private readonly categoriesService: CategoriesService
-  ) {}
+  constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
   getAllCategories() {
@@ -52,7 +52,10 @@ export default class CategoriesController {
   @Roles(RoleEnum.admin)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Put(':id')
-  async updateCategory(@Param('id') id : number, @Body() category: UpdateCategoryDto) {
+  async updateCategory(
+    @Param('id') id: number,
+    @Body() category: UpdateCategoryDto,
+  ) {
     return this.categoriesService.updateCategory(Number(id), category);
   }
 

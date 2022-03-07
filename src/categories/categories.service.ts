@@ -10,7 +10,7 @@ import CategoryNotFoundException from './exceptions/category-not-found.exception
 export default class CategoriesService {
   constructor(
     @InjectRepository(Category)
-    private categoriesRepository: Repository<Category>
+    private categoriesRepository: Repository<Category>,
   ) {}
 
   getAllCategories() {
@@ -18,7 +18,9 @@ export default class CategoriesService {
   }
 
   async getCategoryById(id: number) {
-    const category = await this.categoriesRepository.findOne(id, { relations: ['posts'] });
+    const category = await this.categoriesRepository.findOne(id, {
+      relations: ['posts'],
+    });
     if (category) {
       return category;
     }
@@ -33,9 +35,11 @@ export default class CategoriesService {
 
   async updateCategory(id: number, category: UpdateCategoryDto) {
     await this.categoriesRepository.update(id, category);
-    const updatedCategory = await this.categoriesRepository.findOne(id, { relations: ['posts'] });
+    const updatedCategory = await this.categoriesRepository.findOne(id, {
+      relations: ['posts'],
+    });
     if (updatedCategory) {
-      return updatedCategory
+      return updatedCategory;
     }
     throw new CategoryNotFoundException(id);
   }

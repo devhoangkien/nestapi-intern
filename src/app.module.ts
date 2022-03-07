@@ -3,7 +3,7 @@ import { TypeOrmConfigService } from './database/typeorm-config.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './users/users.module';
 import { join } from 'path';
-import { FilesModule } from './files/files.module';
+import { FilesModule } from './upload/files/files.module';
 import fileConfig from './config/file.config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import authConfig from './config/auth.config';

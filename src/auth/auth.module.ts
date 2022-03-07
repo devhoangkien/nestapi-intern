@@ -7,7 +7,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AnonymousStrategy } from './strategies/anonymous.strategy';
 import { UsersModule } from 'src/users/users.module';
-import { ForgotModule } from 'src/forgot/forgot.module';
+import { ForgotModule } from 'src/auth/forgot/forgot.module';
 import { MailModule } from 'src/mail/mail.module';
 
 @Module({

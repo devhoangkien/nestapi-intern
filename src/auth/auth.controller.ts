@@ -11,7 +11,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { AuthForgotPasswordDto } from './dto/auth-forgot-password.dto';
 import { AuthConfirmEmailDto } from './dto/auth-confirm-email.dto';
@@ -28,17 +28,24 @@ import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
 export class AuthController {
   constructor(public service: AuthService) {}
 
+  @ApiOperation({ summary: 'User login' })
+  @ApiOkResponse({ description: 'user login successfully' })
   @Post('login')
   @HttpCode(HttpStatus.OK)
   public async login(@Body() loginDto: AuthEmailLoginDto) {
     return this.service.validateLogin(loginDto, true);
   }
 
-  // @Post('admin/login')
-  // @HttpCode(HttpStatus.OK)
-  // public async adminLogin(@Body() loginDTO: AuthEmailLoginDto) {
-  //   return this.service.validateLogin(loginDTO, true);
-  // }
+  @ApiOperation({ summary: 'Admin login' })
+  @ApiOkResponse({ description: 'admin login successfully' })
+  @Post('admin/login')
+  @HttpCode(HttpStatus.OK)
+  public async adminLogin(@Body() loginDTO: AuthEmailLoginDto) {
+    return this.service.validateLogin(loginDTO, false);
+  }
+
+  @ApiOperation({ summary: 'User register' })
+  @ApiCreatedResponse({ description: 'Please check your email and activate your account' })
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)

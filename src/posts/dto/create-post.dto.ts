@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 import { Status } from '../../statuses/entities/status.entity';
 import { IsNotExist } from '../../utils/validators/is-not-exists.validator';
-import { FileEntity } from '../../files/entities/file.entity';
+import { FileEntity } from '../../upload/files/entities/file.entity';
 import { IsExist } from '../../utils/validators/is-exists.validator';
 import { Comment } from '../../comments/entities/comment.entity';
 import { Tag } from '../../tags/entities/tag.entity';
@@ -41,8 +41,8 @@ export class CreatePostDto {
   })
   photo?: FileEntity | null;
 
-   @ApiProperty({ type:[Category] })
-   @IsOptional()
+  @ApiProperty({ type: [Category] })
+  @IsOptional()
   categories: Category[];
 
   @ApiProperty({ type: [Tag] })
