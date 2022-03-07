@@ -47,9 +47,7 @@ export class Post extends EntityHelper {
   @Column('text')
   content: string;
 
-  @Column({ nullable: true })
-  public category?: string;
-  
+
   @ManyToOne(() => FileEntity, {
     eager: true,
   })
@@ -59,11 +57,11 @@ export class Post extends EntityHelper {
   @JoinTable()
   public categories: Category[];
 
-  @ManyToOne(() => Tag)
-  @JoinColumn({name: "tag_id"})
+  @ManyToMany(() => Tag)
+  @JoinTable()
   tags: Tag[];
 
-  @OneToMany(() => Comment, (comment: Comment) => comment.postId, {
+  @OneToMany(() => Comment, (comment: Comment) => comment.post, {
     eager: true,
   })
   public comments: Comment[] | null;
@@ -89,6 +87,5 @@ export class Post extends EntityHelper {
   @UpdateDateColumn()
   public updateAt: Date;
 
-  @DeleteDateColumn()
-  public deletedAt: Date;
+ 
 }

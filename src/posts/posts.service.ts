@@ -1,62 +1,53 @@
 import { Injectable } from '@nestjs/common';
+import {CreatePostDto} from './dto/create-post.dto';
+import {Post} from './entities/post.entity';
+import {UpdatePostDto} from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import Category  from 'src/categories/entities/category.entity';
-import { User } from 'src/users/entities/user.entity';
-import { EntityCondition } from 'src/utils/types/entity-condition.type';
-import { IPaginationOptions } from 'src/utils/types/pagination-options';
-import { In, Repository } from 'typeorm';
-import { CreatePostDto } from './dto/create-post.dto';
-import { UpdatePostDto } from './dto/update-post.dto';
-import { Post } from './entities/post.entity';
+import { Repository } from 'typeorm';
+import PostNotFoundException from './exceptions/post-not-found.exception';
+import {User} from '../users/entities/user.entity';
 
 @Injectable()
-export class PostsService {
+export default class PostsService {
   constructor(
     @InjectRepository(Post)
-    private postsRepository: Repository<Post>, 
-		// private readonly categoriesRepository: Repository<Category>
+    private postsRepository: Repository<Post>
   ) {}
-  async create(createPostDto: CreatePostDto) {
-    // const category = await this.categoriesRepository.findOne()
-    let newPost = await this.postsRepository.create({
-			...createPostDto,
+
+  getAllPosts() {
+    return this.postsRepository.find({ relations: ['author'] });
+  }
+
+  async getPostById(id: number) {
+    const post = await this.postsRepository.findOne(id, { relations: ['author'] });
+    if (post) {
+      return post;
+    }
+    throw new PostNotFoundException(id);
+  }
+
+  async createPost(post: CreatePostDto, user: User) {
+    const newPost = await this.postsRepository.create({
+      ...post,
+      author: user
     });
-    
-    return this.postsRepository.save(newPost);
+    await this.postsRepository.save(newPost);
+    return newPost;
   }
 
-  findManyWithPagination(paginationOptions: IPaginationOptions) {
-    return this.postsRepository.find({
-      skip: (paginationOptions.page - 1) * paginationOptions.limit,
-      take: paginationOptions.limit,
-      order: {
-        createdAt: 'DESC',
-      },
-    });
+  async updatePost(id: number, post: UpdatePostDto) {
+    await this.postsRepository.update(id, post);
+    const updatedPost = await this.postsRepository.findOne(id, { relations: ['author'] });
+    if (updatedPost) {
+      return updatedPost
+    }
+    throw new PostNotFoundException(id);
   }
 
-  async getByIds(ids: number[]) {
-    return await this.postsRepository.find({
-      where: { id: In(ids) },
-    });
-  }
-
-  async findOne(fields: EntityCondition<Post>) {
-    return await this.postsRepository.findOne({
-      where: fields,
-    });
-  }
-
-  update(id: number, updateProfileDto: UpdatePostDto) {
-    return this.postsRepository.save(
-      this.postsRepository.create({
-        id,
-        ...updateProfileDto,
-      }),
-    );
-  }
-
-  async softDelete(id: number): Promise<void> {
-    await this.postsRepository.softDelete(id);
+  async deletePost(id: number) {
+    const deleteResponse = await this.postsRepository.delete(id);
+    if (!deleteResponse.affected) {
+      throw new PostNotFoundException(id);
+    }
   }
 }

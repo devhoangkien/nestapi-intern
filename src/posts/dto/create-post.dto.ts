@@ -4,6 +4,7 @@ import {
   IsEmail,
   IsNotEmpty,
   IsOptional,
+  IsString,
   MinLength,
   Validate,
 } from 'class-validator';
@@ -19,16 +20,17 @@ import Category from 'src/categories/entities/category.entity';
 export class CreatePostDto {
   @ApiProperty({ example: 'This is my first post' })
   @IsNotEmpty()
+  @IsString()
+  @Validate(IsNotExist, ['Post'], {
+    message: 'Title already exists',
+  })
   title: string;
-
-  // @ApiProperty({ example: 'This-is-my-first-post' })
-  // @IsNotEmpty()
-  // slug: string | null;
 
   @ApiProperty({
     example:
       'Nest (NestJS) is a framework for building efficient, scalable Node.js server-side applications. It uses progressive JavaScript, is built with and fully supports TypeScript (yet still enables developers to code in pure JavaScript) and combines elements of OOP (Object Oriented Programming), FP (Functional Programming), and FRP (Functional Reactive Programming).',
   })
+  @IsString()
   @IsNotEmpty()
   content: string;
 
@@ -39,24 +41,13 @@ export class CreatePostDto {
   })
   photo?: FileEntity | null;
 
-  @ApiProperty({ type: Category })
+   @ApiProperty({ type:[Category] })
+   @IsOptional()
+  categories: Category[];
+
+  @ApiProperty({ type: [Tag] })
   @IsOptional()
-  @Validate(IsExist, ['Category', 'id'], {
-    message: 'CategoryNotExists',
-  })
-  categories?: Category[];
-
-  @ApiProperty({ type: Tag })
-  @Validate(IsExist, ['Tag', 'id'], {
-    message: 'TagNotExists',
-  })
-  tags?: Tag[];
-
-  @ApiProperty({ type: User })
-  @Validate(IsExist, ['User', 'id'], {
-    message: 'AuthorNotExists',
-  })
-  author?: User;
+  tags: Tag[];
 
   @ApiProperty({ type: Status })
   @Validate(IsExist, ['Status', 'id'], {

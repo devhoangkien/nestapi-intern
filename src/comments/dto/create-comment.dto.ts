@@ -1,19 +1,17 @@
-import { Post } from 'src/posts/entities/post.entity';
-import { IsString, IsNotEmpty, ValidateNested, Validate } from 'class-validator';
+import { IsString, IsNotEmpty, ValidateNested, IsOptional, Validate } from 'class-validator';
 import { Type } from 'class-transformer';
 import ObjectWithIdDTO from 'src/utils/types/object-with-id.type';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from 'src/users/entities/user.entity';
+import { Post } from '../../posts/entities/post.entity';
 import { IsExist } from 'src/utils/validators/is-exists.validator';
 
 export class CreateCommentDto {
+  @ApiProperty({ example: 'This is my comment' })
   @IsString()
   @IsNotEmpty()
-  @ApiProperty({ example: 'great post' })
   content: string;
 
   @ApiProperty({ example: '11' })
-  @ValidateNested()
-  @Type(() => Post)
-  postId: Post;
+  @Type(() => ObjectWithIdDTO)
+  post: ObjectWithIdDTO;
 }
