@@ -3,12 +3,13 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import PostNotFoundException from './exceptions/post-not-found.exception';
 import { User } from '../users/entities/user.entity';
+import { IPaginationOptions } from 'src/utils/types/pagination-options';
 
 @Injectable()
-export default class PostsService {
+export class PostsService {
   constructor(
     @InjectRepository(Post)
     private postsRepository: Repository<Post>,
@@ -16,6 +17,16 @@ export default class PostsService {
 
   getAllPosts() {
     return this.postsRepository.find({ relations: ['author'] });
+  }
+
+  getPostsWithPagination(paginationOptions: IPaginationOptions) {
+    return this.postsRepository.find({
+      skip: (paginationOptions.page - 1) * paginationOptions.limit,
+      take: paginationOptions.limit,
+      order: {
+        createdAt: 'DESC',
+      },
+    });
   }
 
   async getPostById(id: number) {
@@ -26,6 +37,15 @@ export default class PostsService {
       return post;
     }
     throw new PostNotFoundException(id);
+  }
+
+  async getPostBySlug(slug: string) {
+    const postBySlug = await this.postsRepository.findOne({
+      where: { slug: slug },
+    });
+    if (postBySlug) {
+      return postBySlug;
+    }
   }
 
   async createPost(post: CreatePostDto, user: User) {

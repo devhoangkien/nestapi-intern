@@ -4,11 +4,9 @@ import { IsString, IsNotEmpty, Validate } from 'class-validator';
 import { IsNotExist } from '../../utils/validators/is-not-exists.validator';
 
 export class CreateTagDto {
-  @ApiProperty({ example: 'JavaScript' })
+  @ApiProperty({ example: 'TypeScript' })
+  @IsString()
   @IsNotEmpty()
-  @Validate(IsNotExist, ['Tag'], {
-    message: 'Tag name already exists',
-  })
   @IsString()
   name: string | null;
 }

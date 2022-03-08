@@ -35,7 +35,9 @@ export class AuthService {
     });
 
     if (
-      !user ||(user &&!(onlyAdmin ? [RoleEnum.user]:[RoleEnum.admin]).includes(
+      !user ||
+      (user &&
+        !(onlyAdmin ? [RoleEnum.user] : [RoleEnum.admin]).includes(
           user.role.id,
         ))
     ) {
@@ -86,7 +88,6 @@ export class AuthService {
       );
     }
   }
-
 
   async register(dto: AuthRegisterLoginDto): Promise<void> {
     const hash = crypto

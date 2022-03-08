@@ -28,15 +28,19 @@ import Category from 'src/categories/entities/category.entity';
 import { Comment } from 'src/comments/entities/comment.entity';
 import { Tag } from 'src/tags/entities/tag.entity';
 import slugify from 'slugify';
+import { ApiProperty } from '@nestjs/swagger';
 
 @Entity()
 export class Post extends EntityHelper {
+  @ApiProperty({ example: '1' })
   @PrimaryGeneratedColumn()
   id: number;
 
+  @ApiProperty({ example: 'this is my first post' })
   @Column()
   title: string;
 
+  @ApiProperty()
   @Column()
   slug: string;
   @BeforeInsert()
@@ -47,6 +51,7 @@ export class Post extends EntityHelper {
       ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
   }
 
+  @ApiProperty()
   @Column('text')
   content: string;
 
@@ -59,9 +64,9 @@ export class Post extends EntityHelper {
   @JoinTable()
   public categories: Category[];
 
-  @ManyToMany(() => Tag)
+  @ManyToMany(() => Tag, (tag: Tag) => tag.posts)
   @JoinTable()
-  tags: Tag[];
+  public tags: Category[];
 
   @OneToMany(() => Comment, (comment: Comment) => comment.post, {
     eager: true,

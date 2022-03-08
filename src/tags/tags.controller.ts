@@ -1,17 +1,14 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
   UseGuards,
-  Query,
-  DefaultValuePipe,
-  ParseIntPipe,
-  HttpStatus,
-  HttpCode,
+  UseInterceptors,
+  ClassSerializerInterceptor,
+  Post,
   Put,
 } from '@nestjs/common';
 import { TagsService } from './tags.service';
@@ -22,64 +19,48 @@ import { Roles } from 'src/users/roles/roles.decorator';
 import { RoleEnum } from 'src/users/roles/roles.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/users/roles/roles.guard';
-import { infinityPagination } from 'src/utils/infinity-pagination';
+import FindOneParams from 'src/utils/find-one-params';
 
 @ApiTags('Tags')
 @Controller({
-  path: 'tags',
+  path: 'tag',
   version: '1',
 })
+@UseInterceptors(ClassSerializerInterceptor)
 export class TagsController {
   constructor(private readonly tagsService: TagsService) {}
 
-  @ApiBearerAuth()
-  @Roles(RoleEnum.admin)
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  create(@Body() createTagDto: CreateTagDto) {
-    return this.tagsService.create(createTagDto);
-  }
-
   @Get()
-  @HttpCode(HttpStatus.OK)
-  async findAll(
-    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
-  ) {
-    if (limit > 50) {
-      limit = 50;
-    }
-
-    return infinityPagination(
-      await this.tagsService.findManyWithPagination({
-        page,
-        limit,
-      }),
-      { page, limit },
-    );
+  getAllTags() {
+    return this.tagsService.getAllTags();
   }
 
   @Get(':id')
-  @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
-    return this.tagsService.findOne({ id: +id });
+  getTagById(@Param('id') id: number) {
+    return this.tagsService.getTagById(Number(id));
+  }
+
+  @Post()
+  @ApiBearerAuth()
+  @Roles(RoleEnum.admin)
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  async createTag(@Body() tag: CreateTagDto) {
+    return this.tagsService.createTag(tag);
   }
 
   @ApiBearerAuth()
   @Roles(RoleEnum.admin)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Put(':id')
-  @HttpCode(HttpStatus.OK)
-  update(@Param('id') id: number, @Body() updateTagDto: UpdateTagDto) {
-    return this.tagsService.update(id, updateTagDto);
+  async updateTag(@Param('id') id: number, @Body() tag: UpdateTagDto) {
+    return this.tagsService.updateTag(Number(id), tag);
   }
 
   @ApiBearerAuth()
   @Roles(RoleEnum.admin)
   @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Delete(':id')
-  remove(@Param('id') id: number) {
-    return this.tagsService.softDelete(id);
+  async deleteTag(@Param('id') id: number) {
+    return this.tagsService.deleteTag(Number(id));
   }
 }

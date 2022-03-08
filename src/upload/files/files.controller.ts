@@ -42,7 +42,7 @@ export class FilesController {
   }
 
   @Get(':path')
-  download(@Param('path') path, @Response() response) {
+  download(@Param('path') path: string, @Response() response) {
     return response.sendFile(path, { root: './public' });
   }
 }

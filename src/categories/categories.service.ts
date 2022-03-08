@@ -14,7 +14,12 @@ export default class CategoriesService {
   ) {}
 
   getAllCategories() {
-    return this.categoriesRepository.find({ relations: ['posts'] });
+    return this.categoriesRepository.find({
+      relations: ['posts'],
+      order: {
+        id: 'ASC',
+      },
+    });
   }
 
   async getCategoryById(id: number) {

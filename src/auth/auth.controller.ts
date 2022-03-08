@@ -11,7 +11,13 @@ import {
   Delete,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 import { AuthEmailLoginDto } from './dto/auth-email-login.dto';
 import { AuthForgotPasswordDto } from './dto/auth-forgot-password.dto';
 import { AuthConfirmEmailDto } from './dto/auth-confirm-email.dto';
@@ -45,14 +51,17 @@ export class AuthController {
   }
 
   @ApiOperation({ summary: 'User register' })
-  @ApiCreatedResponse({ description: 'Please check your email and activate your account' })
-
+  @ApiCreatedResponse({
+    description: 'Please check your email and activate your account',
+  })
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
   async register(@Body() createUserDto: AuthRegisterLoginDto) {
     return this.service.register(createUserDto);
   }
 
+  @ApiOperation({ summary: 'User confirm email' })
+  @ApiOkResponse({ description: 'User confirm successfully' })
   @Post('confirm')
   @HttpCode(HttpStatus.OK)
   async confirmEmail(@Body() confirmEmailDto: AuthConfirmEmailDto) {

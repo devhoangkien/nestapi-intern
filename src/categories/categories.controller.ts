@@ -14,9 +14,9 @@ import {
 import CategoriesService from './categories.service';
 import CreateCategoryDto from './dto/create-category.dto';
 import UpdateCategoryDto from './dto/update-category.dto';
-import { ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from 'src/users/roles/roles.decorator';
-import { RoleEnum } from 'src/users/roles/roles.enum'
+import { RoleEnum } from 'src/users/roles/roles.enum';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from 'src/users/roles/roles.guard';
 import FindOneParams from 'src/utils/find-one-params';
@@ -36,7 +36,7 @@ export default class CategoriesController {
   }
 
   @Get(':id')
-  getCategoryById(@Param() { id }: FindOneParams) {
+  getCategoryById(@Param('id') id: number) {
     return this.categoriesService.getCategoryById(Number(id));
   }
 

@@ -27,7 +27,6 @@ export class FilesService {
 
     const path = {
       local: `/${file.path}`,
-      s3: file.location,
     };
 
     return this.fileRepository.save(

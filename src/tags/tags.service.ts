@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EntityCondition } from 'src/utils/types/entity-condition.type';
-import { IPaginationOptions } from 'src/utils/types/pagination-options';
-import { Repository } from 'typeorm';
 import { CreateTagDto } from './dto/create-tag.dto';
-import { UpdateTagDto } from './dto/update-tag.dto';
 import { Tag } from './entities/tag.entity';
+import { UpdateTagDto } from './dto/update-tag.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import TagNotFoundException from './exceptions/tag-not-found.exception';
 
 @Injectable()
 export class TagsService {
@@ -14,33 +13,46 @@ export class TagsService {
     private tagsRepository: Repository<Tag>,
   ) {}
 
-  create(createTagDto: CreateTagDto) {
-    return this.tagsRepository.save(this.tagsRepository.create(createTagDto));
-  }
-
-  findManyWithPagination(paginationOptions: IPaginationOptions) {
+  getAllTags() {
     return this.tagsRepository.find({
-      skip: (paginationOptions.page - 1) * paginationOptions.limit,
-      take: paginationOptions.limit,
+      relations: ['posts'],
+      order: {
+        id: 'ASC',
+      },
     });
   }
 
-  findOne(fields: EntityCondition<Tag>) {
-    return this.tagsRepository.findOne({
-      where: fields,
+  async getTagById(id: number) {
+    const tag = await this.tagsRepository.findOne(id, {
+      relations: ['posts'],
     });
+    if (tag) {
+      return tag;
+    }
+    throw new TagNotFoundException(id);
   }
 
-  update(id: number, updateProfileDto: UpdateTagDto) {
-    return this.tagsRepository.save(
-      this.tagsRepository.create({
-        id,
-        ...updateProfileDto,
-      }),
-    );
+  async createTag(tag: CreateTagDto) {
+    const newTag = await this.tagsRepository.create(tag);
+    await this.tagsRepository.save(newTag);
+    return newTag;
   }
 
-  async softDelete(id: number): Promise<void> {
-    await this.tagsRepository.softDelete(id);
+  async updateTag(id: number, tag: UpdateTagDto) {
+    await this.tagsRepository.update(id, tag);
+    const updatedTag = await this.tagsRepository.findOne(id, {
+      relations: ['posts'],
+    });
+    if (updatedTag) {
+      return updatedTag;
+    }
+    throw new TagNotFoundException(id);
+  }
+
+  async deleteTag(id: number) {
+    const deleteResponse = await this.tagsRepository.delete(id);
+    if (!deleteResponse.affected) {
+      throw new TagNotFoundException(id);
+    }
   }
 }
