@@ -14,7 +14,7 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
-  create(createProfileDto: CreateUserDto) {
+  createUser(createProfileDto: CreateUserDto) {
     return this.usersRepository.save(
       this.usersRepository.create(createProfileDto),
     );

@@ -9,16 +9,16 @@
   "dropSchema": false,
   "keepConnectionAlive": true,
   "entities": [
-    "E:\\EKOIOS\\nestapi-intern\\src\\database/../**/*.entity{.ts,.js}"
+    "D:\\HoangKien\\nestapi-intern\\src\\database/../**/*.entity{.ts,.js}"
   ],
   "migrations": [
-    "E:\\EKOIOS\\nestapi-intern\\src\\database/migrations/**/*{.ts,.js}"
+    "D:\\HoangKien\\nestapi-intern\\src\\database/migrations/**/*{.ts,.js}"
   ],
   "seeds": [
-    "E:\\EKOIOS\\nestapi-intern\\src\\database/seeds/**/*{.ts,.js}"
+    "D:\\HoangKien\\nestapi-intern\\src\\database/seeds/**/*{.ts,.js}"
   ],
   "factories": [
-    "E:\\EKOIOS\\nestapi-intern\\src\\database/factories/**/*{.ts,.js}"
+    "D:\\HoangKien\\nestapi-intern\\src\\database/factories/**/*{.ts,.js}"
   ],
   "cli": {
     "entitiesDir": "src",

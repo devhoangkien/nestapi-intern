@@ -9,6 +9,7 @@ import {
   UseGuards,
   Patch,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
@@ -25,6 +26,7 @@ import { AuthResetPasswordDto } from './dto/auth-reset-password.dto';
 import { AuthUpdateDto } from './dto/auth-update.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthRegisterLoginDto } from './dto/auth-register-login.dto';
+import RequestWithUser from './request-with-user.interface';
 
 @ApiTags('Auth')
 @Controller({
@@ -68,12 +70,16 @@ export class AuthController {
     return this.service.confirmEmail(confirmEmailDto.hash);
   }
 
+  @ApiOperation({ summary: 'Forgot password' })
+  @ApiOkResponse({ description: 'Please check mail!' })
   @Post('forgot/password')
   @HttpCode(HttpStatus.OK)
   async forgotPassword(@Body() forgotPasswordDto: AuthForgotPasswordDto) {
     return this.service.forgotPassword(forgotPasswordDto.email);
   }
 
+  @ApiOperation({ summary: 'Reset password' })
+  @ApiOkResponse({ description: 'Password Changed!' })
   @Post('reset/password')
   @HttpCode(HttpStatus.OK)
   async resetPassword(@Body() resetPasswordDto: AuthResetPasswordDto) {
@@ -83,16 +89,18 @@ export class AuthController {
     );
   }
 
+  @ApiOperation({ summary: 'Profile my account' })
   @ApiBearerAuth()
-  @Get('me')
+  @Get('profile')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.OK)
-  public async me(@Request() request) {
+  public async profile(@Request() request) {
     return this.service.me(request.user);
   }
 
+  @ApiOperation({ summary: 'Update Profile' })
   @ApiBearerAuth()
-  @Patch('me')
+  @Patch('profile/update')
   @UseGuards(AuthGuard('jwt'))
   @HttpCode(HttpStatus.OK)
   public async update(@Request() request, @Body() userDto: AuthUpdateDto) {
@@ -105,5 +113,12 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   public async delete(@Request() request) {
     return this.service.softDelete(request.user);
+  }
+
+  @ApiBearerAuth()
+  @Post('log-out')
+  @HttpCode(HttpStatus.OK)
+  async logOut(@Req() request: RequestWithUser) {
+    request.res.setHeader('Set-Cookie', this.service.getCookiesForLogOut());
   }
 }

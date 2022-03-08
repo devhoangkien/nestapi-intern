@@ -12,12 +12,6 @@ services:
       MYSQL_USER: ekoios
       MYSQL_PASSWORD: ekoiospw
 
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080
-
   redis:
     image: redis:6-alpine
     ports:
