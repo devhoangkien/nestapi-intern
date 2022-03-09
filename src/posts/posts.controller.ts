@@ -38,6 +38,8 @@ import { RolesGuard } from 'src/users/roles/roles.guard';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 import { title } from 'process';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { PaginationParams } from 'src/utils/types/pagination-params';
+import { QueryPostProperty } from './dto/search-post.dto';
 
 @ApiTags('Posts')
 @Controller({
@@ -105,5 +107,12 @@ export class PostsController {
   @Delete(':id')
   async deletePost(@Param('id') id: number) {
     return this.postsService.deletePost(Number(id));
+  }
+
+  @ApiOkResponse({ description: 'list of post search by query' })
+  @ApiOperation({ summary: 'get posts by with query' })
+  @Get('search')
+  getPostByQuery(@Query() query: QueryPostProperty) {
+    return this.postsService.getPostByQuery(query);
   }
 }
