@@ -23,11 +23,12 @@ export class PostsService {
 
   getPostsWithPagination(paginationOptions: searchOptions) {
     const condition = [
-      {
-      title: Like(`%${paginationOptions.keyword}%`),
-      }
-    ];
+        {
+        title: Like(`%${paginationOptions.keyword}%`)
+        }
+      ];
     return this.postsRepository.find({
+      select: ['id',"title","createdAt"],
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
       where: condition,
@@ -35,7 +36,7 @@ export class PostsService {
         alias: "post",
         leftJoinAndSelect: {
             tag: "post.tags",
-        },
+        }
     },
       order: {
         createdAt: 'DESC'
@@ -89,28 +90,5 @@ export class PostsService {
     }
   }
 
-  async getPostByQuery(query: QueryPostProperty): Promise<Post[]> {
-    const qb = await this.postsRepository
-      .createQueryBuilder('post')
-      .where("post.title Like :title", { title: `%${query.title}%` })
-    if (query.limit && query.offset)
-      qb.skip(query.offset).take(query.limit);
-      qb.orderBy(query.sortField || 'post.createAt','DESC')
-    if (query.title)
-      qb.andWhere('post.title LIKE :title', {title: `%${query.title}%`});
-    if (query.tags) {
-      qb.andWhere('tag.name IN (:tags)', {tags: query.tags.split(',')});
-      qb.andWhere(qb2 => {
-        const subQuery = qb2.subQuery() 
-          .select('post.id')
-          .from(Post, 'post')
-          .leftJoin('post.tags','tag')
-          .where('tag.name IN (:tags)', {tags: query.tags.split(',')})
-          .getQuery();
-        return 'post.id IN ' + subQuery;
-      })
-    }
-    const posts = await qb.getMany();
-    return posts;
-  }
+  
 }

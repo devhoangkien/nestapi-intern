@@ -3,8 +3,9 @@ import { CreateTagDto } from './dto/create-tag.dto';
 import { Tag } from './entities/tag.entity';
 import { UpdateTagDto } from './dto/update-tag.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import TagNotFoundException from './exceptions/tag-not-found.exception';
+import { searchOptions } from 'src/utils/types/search-options';
 
 @Injectable()
 export class TagsService {
@@ -18,6 +19,29 @@ export class TagsService {
       relations: ['posts'],
       order: {
         id: 'ASC',
+      },
+    });
+  }
+
+  getTagBySearch(paginationOptions: searchOptions) {
+    const condition = [
+        {
+        name: Like(`%${paginationOptions.keyword}%`)
+        }
+      ];
+    return this.tagsRepository.find({
+      select: ['id',"name"],
+      skip: (paginationOptions.page - 1) * paginationOptions.limit,
+      take: paginationOptions.limit,
+      where: condition,
+      join: {
+        alias: "tag",
+        leftJoinAndSelect: {
+            pots: "tag.posts",
+        }
+    },
+      order: {
+        id: 'DESC'
       },
     });
   }

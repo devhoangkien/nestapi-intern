@@ -60,20 +60,22 @@ export class Post extends EntityHelper {
   })
   photo?: FileEntity | null;
 
-  @ManyToMany(() => Category, (category: Category) => category.posts)
+  @ManyToMany(() => Category, (category: Category) => category.posts, {
+    eager: true,
+  })
   @JoinTable()
   public categories: Category[];
 
-  @ManyToMany(() => Tag, (tag: Tag) => tag.posts)
+  @ManyToMany(() => Tag, (tag: Tag) => tag.posts, {
+    eager: true,
+  })
   @JoinTable()
   public tags: Category[];
 
-  @OneToMany(() => Comment, (comment: Comment) => comment.post, {
-    eager: true,
-  })
+  @OneToMany(() => Comment, (comment: Comment) => comment.post)
   public comments: Comment[] | null;
 
-  @ManyToOne(() => User, (author: User) => author.posts, { eager: true })
+  @ManyToOne(() => User, (author: User) => author.posts)
   public author: User;
 
   @Column({ default: 0 })

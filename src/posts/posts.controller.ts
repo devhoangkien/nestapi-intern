@@ -106,10 +106,5 @@ export class PostsController {
     return this.postsService.deletePost(Number(id));
   }
 
-  // @ApiOkResponse({ description: 'list of post search by query' })
-  // @ApiOperation({ summary: 'search post' })
-  // @Get('search')
-  // getPostByQuery(@Query() query: QueryPostProperty) {
-  //   return this.postsService.getPostByQuery(query);
-  // }
+ 
 }

@@ -24,7 +24,7 @@ export class Tag extends EntityHelper {
   @Allow()
   @ApiProperty({ example: 'TypeScript' })
   @Column({ unique: true, nullable: true })
-  name?: string;
+  name: string;
 
   @ManyToMany(() => Post, (post: Post) => post.tags)
   public posts: Post[];
