@@ -1,8 +1,9 @@
-import { Transform } from 'class-transformer';
+import { plainToClass, Transform, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsEmail,
   IsNotEmpty,
+  IsNumber,
   IsOptional,
   IsString,
   MinLength,
@@ -16,6 +17,7 @@ import { Comment } from '../../comments/entities/comment.entity';
 import { Tag } from '../../tags/entities/tag.entity';
 import { User } from '../../users/entities/user.entity';
 import Category from 'src/categories/entities/category.entity';
+import { LessThan, MoreThan } from 'typeorm';
 
 export class CreatePostDto {
   @ApiProperty({ example: 'This is my first post' })
@@ -58,4 +60,39 @@ export class CreatePostDto {
     message: 'statusNotExists',
   })
   status?: Status;
+}
+
+
+export class QueryCommon {
+
+  @ApiProperty({ required: false, example: 'createAt' })
+  @IsOptional()
+  @IsString()
+  sortField: string;
+
+  @ApiProperty({ required: false, example: 'DESC' })
+  @IsOptional()
+  @IsString()
+  sortOrder: string;
+  
+
+}
+
+export class QueryPostProperty extends QueryCommon {
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  author?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @ApiProperty({ required: false , description: 'tags=nodejs,nodejs'})
+  @IsOptional()
+  @IsString()
+  tags?: string;
+
+
 }

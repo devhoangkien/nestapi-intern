@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto } from './dto/create-post.dto';
+import { CreatePostDto, QueryCommon, QueryPostProperty } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -7,6 +7,8 @@ import { Like, Repository } from 'typeorm';
 import PostNotFoundException from './exceptions/post-not-found.exception';
 import { User } from '../users/entities/user.entity';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
+import { title } from 'process';
+import { query } from 'express';
 
 @Injectable()
 export class PostsService {
@@ -73,5 +75,16 @@ export class PostsService {
     if (!deleteResponse.affected) {
       throw new PostNotFoundException(id);
     }
+  }
+
+  async searchPosts(seachValue: QueryPostProperty) {
+    let res = await this.postsRepository.findAndCount({
+      where: `username like '%${seachValue}%' or action like '%${seachValue}%' or ip like '%${seachValue}%'`,
+      order: {
+        [seachValue.sortField]: seachValue.sortOrder === "descend" ? 'DESC' : 'ASC',
+      },
+     
+    });
+    return res;
   }
 }

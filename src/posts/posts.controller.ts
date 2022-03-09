@@ -19,7 +19,7 @@ import {
   UploadedFile,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { CreatePostDto } from './dto/create-post.dto';
+import { CreatePostDto, QueryCommon, QueryPostProperty } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import RequestWithUser from '../auth/request-with-user.interface';
 import { AuthGuard } from '@nestjs/passport';
@@ -105,5 +105,12 @@ export class PostsController {
   @Delete(':id')
   async deletePost(@Param('id') id: number) {
     return this.postsService.deletePost(Number(id));
+  }
+
+  @ApiOkResponse({ description: 'list of post search by query' })
+  @ApiOperation({ summary: 'get posts by with query' })
+  @Get('search')
+  getPostByQuery(@Query() seachValue: QueryPostProperty ) {
+    return this.postsService.searchPosts(seachValue);
   }
 }
