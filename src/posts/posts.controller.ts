@@ -26,8 +26,6 @@ import { AuthGuard } from '@nestjs/passport';
 import { RoleEnum } from 'src/users/roles/roles.enum';
 import {
   ApiBearerAuth,
-  ApiBody,
-  ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -36,9 +34,6 @@ import {
 import { Roles } from 'src/users/roles/roles.decorator';
 import { RolesGuard } from 'src/users/roles/roles.guard';
 import { infinityPagination } from 'src/utils/infinity-pagination';
-import { title } from 'process';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { PaginationParams } from 'src/utils/types/pagination-params';
 import { QueryPostProperty } from './dto/search-post.dto';
 
 @ApiTags('Posts')
@@ -110,7 +105,7 @@ export class PostsController {
   }
 
   @ApiOkResponse({ description: 'list of post search by query' })
-  @ApiOperation({ summary: 'get posts by with query' })
+  @ApiOperation({ summary: 'search post' })
   @Get('search')
   getPostByQuery(@Query() query: QueryPostProperty) {
     return this.postsService.getPostByQuery(query);
