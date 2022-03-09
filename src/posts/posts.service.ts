@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePostDto} from './dto/create-post.dto';
+import { CreatePostDto } from './dto/create-post.dto';
 import { Post } from './entities/post.entity';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -23,23 +23,23 @@ export class PostsService {
 
   getPostsWithPagination(paginationOptions: searchOptions) {
     const condition = [
-        {
-        title: Like(`%${paginationOptions.keyword}%`)
-        }
-      ];
+      {
+        title: Like(`%${paginationOptions.keyword}%`),
+      },
+    ];
     return this.postsRepository.find({
-      select: ['id',"title","createdAt"],
+      select: ['id', 'title', 'createdAt'],
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
       where: condition,
       join: {
-        alias: "post",
+        alias: 'post',
         leftJoinAndSelect: {
-            tag: "post.tags",
-        }
-    },
+          tag: 'post.tags',
+        },
+      },
       order: {
-        createdAt: 'DESC'
+        createdAt: 'DESC',
       },
     });
   }
@@ -89,6 +89,4 @@ export class PostsService {
       throw new PostNotFoundException(id);
     }
   }
-
-  
 }

@@ -34,7 +34,7 @@ import { infinityPagination } from 'src/utils/infinity-pagination';
 })
 @UseInterceptors(ClassSerializerInterceptor)
 export class TagsController {
-  constructor(private readonly tagsService: TagsService) {}
+  constructor(private readonly tagsService: TagsService) { }
 
   @Get()
   getAllTags() {
@@ -57,7 +57,7 @@ export class TagsController {
       await this.tagsService.getTagBySearch({
         page,
         limit,
-        keyword
+        keyword,
       }),
       { page, limit },
     );

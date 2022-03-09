@@ -25,23 +25,18 @@ export class TagsService {
 
   getTagBySearch(paginationOptions: searchOptions) {
     const condition = [
-        {
-        name: Like(`%${paginationOptions.keyword}%`)
-        }
-      ];
+      {
+        name: Like(`%${paginationOptions.keyword}%`),
+      },
+    ];
     return this.tagsRepository.find({
-      select: ['id',"name"],
+      relations: ['posts'],
+      select: ['id', 'name'],
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
       where: condition,
-      join: {
-        alias: "tag",
-        leftJoinAndSelect: {
-            pots: "tag.posts",
-        }
-    },
       order: {
-        id: 'DESC'
+        id: 'DESC',
       },
     });
   }

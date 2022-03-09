@@ -66,7 +66,7 @@ export class PostsController {
       await this.postsService.getPostsWithPagination({
         page,
         limit,
-        keyword
+        keyword,
       }),
       { page, limit },
     );
@@ -105,6 +105,4 @@ export class PostsController {
   async deletePost(@Param('id') id: number) {
     return this.postsService.deletePost(Number(id));
   }
-
- 
 }

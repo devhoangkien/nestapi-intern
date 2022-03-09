@@ -60,9 +60,7 @@ export class Post extends EntityHelper {
   })
   photo?: FileEntity | null;
 
-  @ManyToMany(() => Category, (category: Category) => category.posts, {
-    eager: true,
-  })
+  @ManyToMany(() => Category, (category: Category) => category.posts)
   @JoinTable()
   public categories: Category[];
 
@@ -85,9 +83,7 @@ export class Post extends EntityHelper {
     if (this.viewsCount === undefined) this.viewsCount = 0;
   }
 
-  @ManyToOne(() => Status, {
-    eager: true,
-  })
+  @ManyToOne(() => Status)
   status?: Status;
 
   @CreateDateColumn()
