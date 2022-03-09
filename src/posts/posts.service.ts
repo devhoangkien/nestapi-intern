@@ -79,7 +79,7 @@ export class PostsService {
 
   async searchPosts(seachValue: QueryPostProperty) {
     let res = await this.postsRepository.findAndCount({
-      where: `username like '%${seachValue}%' or action like '%${seachValue}%' or ip like '%${seachValue}%'`,
+      where: `title like '%${seachValue}%' or tags like '%${seachValue}%' or categories like '%${seachValue}%'`,
       order: {
         [seachValue.sortField]: seachValue.sortOrder === "descend" ? 'DESC' : 'ASC',
       },
