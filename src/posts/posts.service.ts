@@ -8,7 +8,7 @@ import PostNotFoundException from './exceptions/post-not-found.exception';
 import { User } from '../users/entities/user.entity';
 import { IPaginationOptions } from 'src/utils/types/pagination-options';
 import { QueryPostProperty } from './dto/search-post.dto';
-
+import { searchOptions } from 'src/utils/types/search-options';
 
 @Injectable()
 export class PostsService {
@@ -21,12 +21,24 @@ export class PostsService {
     return this.postsRepository.find({ relations: ['author'] });
   }
 
-  getPostsWithPagination(paginationOptions: IPaginationOptions) {
+  getPostsWithPagination(paginationOptions: searchOptions) {
+    const condition = [
+      {
+      title: Like(`%${paginationOptions.keyword}%`),
+      }
+    ];
     return this.postsRepository.find({
       skip: (paginationOptions.page - 1) * paginationOptions.limit,
       take: paginationOptions.limit,
+      where: condition,
+      join: {
+        alias: "post",
+        leftJoinAndSelect: {
+            tag: "post.tags",
+        },
+    },
       order: {
-        createdAt: 'DESC',
+        createdAt: 'DESC'
       },
     });
   }
@@ -76,7 +88,6 @@ export class PostsService {
       throw new PostNotFoundException(id);
     }
   }
-
 
   async getPostByQuery(query: QueryPostProperty): Promise<Post[]> {
     const qb = await this.postsRepository

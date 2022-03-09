@@ -51,11 +51,12 @@ export class PostsController {
     return this.postsService.getAllPosts();
   }
   @ApiOperation({ summary: 'Get post with pagination' })
-  @Get()
+  @Get('search')
   @HttpCode(HttpStatus.OK)
   async getPostsWithPagination(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('keyword') keyword: string,
   ) {
     if (limit > 50) {
       limit = 50;
@@ -65,6 +66,7 @@ export class PostsController {
       await this.postsService.getPostsWithPagination({
         page,
         limit,
+        keyword
       }),
       { page, limit },
     );
@@ -104,10 +106,10 @@ export class PostsController {
     return this.postsService.deletePost(Number(id));
   }
 
-  @ApiOkResponse({ description: 'list of post search by query' })
-  @ApiOperation({ summary: 'search post' })
-  @Get('search')
-  getPostByQuery(@Query() query: QueryPostProperty) {
-    return this.postsService.getPostByQuery(query);
-  }
+  // @ApiOkResponse({ description: 'list of post search by query' })
+  // @ApiOperation({ summary: 'search post' })
+  // @Get('search')
+  // getPostByQuery(@Query() query: QueryPostProperty) {
+  //   return this.postsService.getPostByQuery(query);
+  // }
 }
