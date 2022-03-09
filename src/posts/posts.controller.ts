@@ -23,7 +23,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import RequestWithUser from '../auth/request-with-user.interface';
 import { AuthGuard } from '@nestjs/passport';
-import { RoleEnum } from 'src/users/roles/roles.enum';
+import { RoleEnum } from 'src/roles/roles.enum';
 import {
   ApiBearerAuth,
   ApiCreatedResponse,
@@ -31,8 +31,8 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { Roles } from 'src/users/roles/roles.decorator';
-import { RolesGuard } from 'src/users/roles/roles.guard';
+import { Roles } from 'src/roles/roles.decorator';
+import { RolesGuard } from 'src/roles/roles.guard';
 import { infinityPagination } from 'src/utils/infinity-pagination';
 import { QueryPostProperty } from './dto/search-post.dto';
 

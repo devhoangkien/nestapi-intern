@@ -17,9 +17,9 @@ import { GetCommentsQuery } from './queries/implementations/get-comments.query';
 import GetCommentsDto from './dto/get-comments.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/users/roles/roles.guard';
-import { Roles } from 'src/users/roles/roles.decorator';
-import { RoleEnum } from 'src/users/roles/roles.enum';
+import { RolesGuard } from 'src/roles/roles.guard';
+import { Roles } from 'src/roles/roles.decorator';
+import { RoleEnum } from 'src/roles/roles.enum';
 
 @ApiTags('Comments')
 @Controller({

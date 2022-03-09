@@ -17,9 +17,9 @@ import {
   RelationId,
   JoinColumn,
 } from 'typeorm';
-import { Role } from '../../users/roles/entities/role.entity';
+import { Role } from '../../roles/entities/role.entity';
 import { Status } from '../../statuses/entities/status.entity';
-import { FileEntity } from '../../upload/files/entities/file.entity';
+import { FileEntity } from '../../files/entities/file.entity';
 import * as bcrypt from 'bcryptjs';
 import { EntityHelper } from 'src/utils/entity-helper';
 import { AuthProvidersEnum } from 'src/auth/auth-providers.enum';

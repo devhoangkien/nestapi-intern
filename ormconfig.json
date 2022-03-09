@@ -5,9 +5,10 @@
   "username": "ekoios",
   "password": "ekoiospw",
   "database": "blogapi",
-  "synchronize": true,
+  "synchronize": false,
   "dropSchema": false,
   "keepConnectionAlive": true,
+  "logging": true,
   "entities": [
     "D:\\HoangKien\\nestapi-intern\\src\\database/../**/*.entity{.ts,.js}"
   ],

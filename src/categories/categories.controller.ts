@@ -15,10 +15,10 @@ import CategoriesService from './categories.service';
 import CreateCategoryDto from './dto/create-category.dto';
 import UpdateCategoryDto from './dto/update-category.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from 'src/users/roles/roles.decorator';
-import { RoleEnum } from 'src/users/roles/roles.enum';
+import { Roles } from 'src/roles/roles.decorator';
+import { RoleEnum } from 'src/roles/roles.enum';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from 'src/users/roles/roles.guard';
+import { RolesGuard } from 'src/roles/roles.guard';
 import FindOneParams from 'src/utils/find-one-params';
 
 @ApiTags('Category')
